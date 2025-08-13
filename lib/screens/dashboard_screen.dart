@@ -7,6 +7,7 @@ import '../providers/budget_provider.dart';
 import 'add_expense_screen.dart';
 import 'update_money_screen.dart';
 import '../widgets/powered_by_footer.dart';
+import '../services/notification_service.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -78,34 +79,43 @@ class DashboardScreen extends StatelessWidget {
             Text('Puntos: ${provider.points}'),
             const SizedBox(height: 20),
             Row(
-              children: [
-                ElevatedButton(
-                  onPressed: provider.initialMoney == 0
-                      ? null
-                      : () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) => const AddExpenseScreen()));
-                        },
-                  child: const Text('Añadir gasto'),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => const UpdateMoneyScreen()));
-                  },
-                  child: const Text('Actualizar dinero'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            if (provider.alertState == 'red' && !provider.challengeActive)
-              ElevatedButton(
-                onPressed: provider.startChallenge,
-                child: const Text('Iniciar reto 48h'),
+                children: [
+                  ElevatedButton(
+                    onPressed: provider.initialMoney == 0
+                        ? null
+                        : () {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => const AddExpenseScreen()));
+                          },
+                    child: const Text('Añadir gasto'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (_) => const UpdateMoneyScreen()));
+                    },
+                    child: const Text('Actualizar dinero'),
+                  ),
+                ],
               ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  NotificationService.cancelAll();
+                  NotificationService.scheduleReminder(
+                      const Duration(seconds: 30));
+                },
+                child: const Text('Probar notificación en 30s'),
+              ),
+              const SizedBox(height: 20),
+              if (provider.alertState == 'red' && !provider.challengeActive)
+                ElevatedButton(
+                  onPressed: provider.startChallenge,
+                  child: const Text('Iniciar reto 48h'),
+                ),
             if (provider.challengeActive)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

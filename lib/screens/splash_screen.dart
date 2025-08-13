@@ -28,11 +28,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _runAnimation() async {
     await Future.delayed(const Duration(milliseconds: 200));
     setState(() => _showShield = true);
+
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
       _moveShield = true;
-      _showBrand = true;
+      _showBrand = true; // aquí empezará el fade-in + slide de la marca
     });
+
     await Future.delayed(const Duration(seconds: 1));
     final provider = context.read<BudgetProvider>();
     final next = provider.name.isEmpty
@@ -50,6 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // ESCUDO
             AnimatedSlide(
               duration: const Duration(milliseconds: 500),
               offset: _moveShield ? const Offset(-0.5, 0) : Offset.zero,
@@ -61,18 +64,30 @@ class _SplashScreenState extends State<SplashScreen> {
                   scale: _showShield ? 1 : 0.8,
                   child: SvgPicture.asset(
                     'assets/escudo.svg',
-                    width: 80,
+                    width: 100,
                   ),
                 ),
               ),
             ),
+
             const SizedBox(width: 10),
-            AnimatedSlide(
-              duration: const Duration(milliseconds: 500),
-              offset: _showBrand ? Offset.zero : const Offset(1, 0),
-              child: SvgPicture.asset(
-                'assets/marca.svg',
-                width: 120,
+
+            // MARCA — reservado el espacio + invisible al inicio
+            SizedBox(
+              width: 160, // reservamos el ancho para que no se “corte”
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: _showBrand ? 1 : 0, // evita ver media marca al inicio
+                child: AnimatedSlide(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOut,
+                  // desplazamiento corto para no partir fuera del área visible
+                  offset: _showBrand ? Offset.zero : const Offset(0.25, 0),
+                  child: SvgPicture.asset(
+                    'assets/marca.svg',
+                    width: 160,
+                  ),
+                ),
               ),
             ),
           ],

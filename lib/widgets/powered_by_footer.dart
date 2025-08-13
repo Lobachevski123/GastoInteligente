@@ -5,8 +5,9 @@ class PoweredByFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return SafeArea(
+      top: false, // solo nos importa el borde inferior
+      minimum: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Text(
         'Powered by Colegio Pitágoras',
         textAlign: TextAlign.center,

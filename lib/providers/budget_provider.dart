@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-
 import '../models/expense.dart';
+import '../services/notification_service.dart';
 
 class BudgetProvider extends ChangeNotifier {
   double initialMoney = 0;
@@ -21,6 +20,8 @@ class BudgetProvider extends ChangeNotifier {
   DateTime? lastExpenseDate;
   bool challengeActive = false;
   DateTime? challengeStart;
+  int points = 0;
+  int get level => (points ~/ 100) + 1;
 
   final _uuid = const Uuid();
 
@@ -39,6 +40,7 @@ class BudgetProvider extends ChangeNotifier {
     currency = prefs.getString('currency') ?? 'USD';
     reminderDays = prefs.getInt('reminderDays') ?? 7;
     streak = prefs.getInt('streak') ?? 0;
+    points = prefs.getInt('points') ?? 0;
     final last = prefs.getString('lastExpenseDate');
     if (last != null) {
       lastExpenseDate = DateTime.tryParse(last);
@@ -63,6 +65,7 @@ class BudgetProvider extends ChangeNotifier {
     await prefs.setString('currency', currency);
     await prefs.setInt('reminderDays', reminderDays);
     await prefs.setInt('streak', streak);
+    await prefs.setInt('points', points);
     if (lastExpenseDate != null) {
       await prefs.setString(
           'lastExpenseDate', lastExpenseDate!.toIso8601String());
@@ -83,6 +86,7 @@ class BudgetProvider extends ChangeNotifier {
     currency = newCurrency;
     reminderDays = newReminderDays;
     _save();
+    NotificationService.scheduleReminder(Duration(days: reminderDays));
     notifyListeners();
   }
 
@@ -107,7 +111,9 @@ class BudgetProvider extends ChangeNotifier {
         date: date ?? DateTime.now());
     expenses.add(exp);
     _updateStreak(exp.date);
+    _addPoints(5);
     _save();
+    NotificationService.scheduleReminder(Duration(days: reminderDays));
     notifyListeners();
   }
 
@@ -161,6 +167,7 @@ class BudgetProvider extends ChangeNotifier {
   void completeChallenge() {
     challengeActive = false;
     challengeStart = null;
+     _addPoints(50);  
     _save();
     notifyListeners();
   }
@@ -170,5 +177,8 @@ class BudgetProvider extends ChangeNotifier {
     final end = challengeStart!.add(const Duration(hours: 48));
     final diff = end.difference(DateTime.now());
     return diff.isNegative ? Duration.zero : diff;
+  }
+    void _addPoints(int value) {
+    points += value;
   }
 }

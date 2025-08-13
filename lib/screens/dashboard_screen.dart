@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/budget_provider.dart';
@@ -26,7 +28,16 @@ class DashboardScreen extends StatelessWidget {
     final color = _colorForState(provider.alertState);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Gasto Inteligente')),
+      appBar: AppBar(
+        title: const Text('Gasto Inteligente'),
+        actions: [
+          if (kDebugMode)
+            IconButton(
+              icon: const Icon(Icons.restart_alt),
+              onPressed: () => Phoenix.rebirth(context),
+            ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -61,6 +72,8 @@ class DashboardScreen extends StatelessWidget {
             Text('Porcentaje gastado: ${pct.toStringAsFixed(1)}%'),
             const SizedBox(height: 20),
             Text('Racha de registro: ${provider.streak} días'),
+            Text('Nivel: ${provider.level}'),
+            Text('Puntos: ${provider.points}'),
             const SizedBox(height: 20),
             Row(
               children: [

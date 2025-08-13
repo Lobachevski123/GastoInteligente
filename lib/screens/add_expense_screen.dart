@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/budget_provider.dart';
+import '../widgets/powered_by_footer.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
@@ -21,6 +22,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     final categories = ['Comida', 'Transporte', 'Ocio', 'Otros'];
     return Scaffold(
       appBar: AppBar(title: const Text('Añadir gasto')),
+      bottomNavigationBar: const PoweredByFooter(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

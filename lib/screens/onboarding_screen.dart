@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/budget_provider.dart';
 import 'dashboard_screen.dart';
+import '../widgets/powered_by_footer.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -21,6 +22,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Bienvenido')),
+      bottomNavigationBar: const PoweredByFooter(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

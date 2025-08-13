@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../providers/budget_provider.dart';
 import 'add_expense_screen.dart';
 import 'update_money_screen.dart';
+import '../widgets/powered_by_footer.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -38,6 +39,7 @@ class DashboardScreen extends StatelessWidget {
             ),
         ],
       ),
+      bottomNavigationBar: const PoweredByFooter(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

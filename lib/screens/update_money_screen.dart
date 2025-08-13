@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/budget_provider.dart';
+import '../widgets/powered_by_footer.dart';
 
 class UpdateMoneyScreen extends StatefulWidget {
   const UpdateMoneyScreen({super.key});
@@ -18,6 +19,7 @@ class _UpdateMoneyScreenState extends State<UpdateMoneyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Actualizar dinero')),
+      bottomNavigationBar: const PoweredByFooter(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
